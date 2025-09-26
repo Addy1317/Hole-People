@@ -566,34 +566,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &975513723 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4702770191006619838, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-  m_PrefabInstance: {fileID: 2056866750292524287}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &975513724 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1063701873159195296, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-  m_PrefabInstance: {fileID: 2056866750292524287}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 975513723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8677277367c1494992ef54d858d6ed9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &975513732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 975513723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50cb941ed72a7b640b48cea7f22bcf1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1109361753
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,22 +679,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 616296110056994141, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-      propertyPath: characterColor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2370482138258679802, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-      propertyPath: pathCheckSystem
-      value: 
-      objectReference: {fileID: 975513732}
-    - target: {fileID: 2370482138258679802, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-      propertyPath: gridObjectDetection
-      value: 
-      objectReference: {fileID: 975513724}
-    - target: {fileID: 7079843582467718651, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 9d41a3e359dc2c342a53d0f018cb8619, type: 2}
     - target: {fileID: 8855289909064260455, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
       propertyPath: m_Name
       value: Level-1
@@ -730,10 +686,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4702770191006619838, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 975513732}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -25,10 +25,33 @@ namespace SlowpokeStudio.character
            
         }
 
+        public bool IsMovementFinished()
+        {
+            return !isMoving;
+        }
+
         public ObjectColor GetColor()
         {
             return character.characterColor;
         }
+        public void MoveToHoleWithChain(Hole targetHole, List<CharacterManager> connectedCharacters)
+        {
+            StartCoroutine(MoveChainCharactersRoutine(targetHole, connectedCharacters));
+        }
+
+        private IEnumerator MoveChainCharactersRoutine(Hole targetHole, List<CharacterManager> characters)
+        {
+            foreach (var character in characters)
+            {
+                if (character == null || !character.gameObject.activeSelf)
+                    continue;
+
+                character.MoveToHole(targetHole);
+                yield return new WaitUntil(() => character.IsMovementFinished()); // Wait until character finishes
+                yield return new WaitForSeconds(0.05f); // Small delay for cleaner visuals
+            }
+        }
+
 
         public void MoveToHole(Hole targetHole)
         {

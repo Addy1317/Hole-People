@@ -15,6 +15,7 @@ namespace SlowpokeStudio.Gameplay
         // References
         private GridManager gridManager;
         private GridPathHandler pathCheckSystem;
+        private GridObjectDetection gridObjectDetection;
 
         private void Awake()
         {
@@ -28,8 +29,9 @@ namespace SlowpokeStudio.Gameplay
         {
             gridManager = GridManager.Instance;//FindObjectOfType<GridManager>();
             pathCheckSystem = GridManager.Instance.pathCheckSystem;//FindObjectOfType<PathCheckSystem>();
+            gridObjectDetection = GridManager.Instance.gridObjectDetection;
 
-            if (gridManager == null || pathCheckSystem == null)
+            if (gridManager == null || pathCheckSystem == null || gridObjectDetection == null)
             {
                 Debug.LogError("[PlayerController] Missing GridManager or PathCheckSystem in level.");
             }
@@ -58,13 +60,28 @@ namespace SlowpokeStudio.Gameplay
 
                     Vector2Int holeGridPos = gridManager.GetGridPosition(hole.transform.position);
 
-                    // Get characters that can move to this hole
-                    List<GridObjectData> validCharacters = pathCheckSystem.GetMovableCharacters(holeGridPos, hole.holeColor);
+                    // Step 1: Get characters that can move directly
+                    List<GridObjectData> directMovableCharacters = pathCheckSystem.GetMovableCharacters(holeGridPos, hole.holeColor);
 
-                    // Move each one
-                    foreach (var charData in validCharacters)
+                    // Step 2: Track all characters to move
+                    HashSet<Vector2Int> charactersToMove = new HashSet<Vector2Int>();
+
+                    foreach (var charData in directMovableCharacters)
                     {
-                        Vector3 worldPos = gridManager.GetWorldPosition(charData.gridPosition.x, charData.gridPosition.y);
+                        // Get connected neighbors of same color
+                        List<GridObjectData> connected = gridObjectDetection.GetAdjacentSameColorCharacters(charData.gridPosition, charData.color);
+
+                        // Add all to final set (avoids duplicates)
+                        foreach (var c in connected)
+                        {
+                            charactersToMove.Add(c.gridPosition);
+                        }
+                    }
+
+                    // Step 3: Move all collected characters
+                    foreach (Vector2Int gridPos in charactersToMove)
+                    {
+                        Vector3 worldPos = gridManager.GetWorldPosition(gridPos.x, gridPos.y);
                         Collider[] hits = Physics.OverlapSphere(worldPos, 0.1f);
 
                         foreach (Collider col in hits)
@@ -73,12 +90,16 @@ namespace SlowpokeStudio.Gameplay
                             if (mover != null)
                             {
                                 mover.MoveToHole(hole);
-                                break; // found the one at that cell
+                                break;
                             }
                         }
                     }
+
+                    Debug.Log($"[PlayerController] Total characters moved: {charactersToMove.Count}");
+
                 }
             }
         }
-    }  
+    }
 }
+
