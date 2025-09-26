@@ -79,6 +79,7 @@ namespace SlowpokeStudio.Gameplay
                     }
 
                     // Step 3: Move all collected characters
+                    int movedCount = 0;
                     foreach (Vector2Int gridPos in charactersToMove)
                     {
                         Vector3 worldPos = gridManager.GetWorldPosition(gridPos.x, gridPos.y);
@@ -87,19 +88,23 @@ namespace SlowpokeStudio.Gameplay
                         foreach (Collider col in hits)
                         {
                             CharacterManager mover = col.GetComponent<CharacterManager>();
-                            if (mover != null)
+                            if (mover != null && mover.gameObject.activeInHierarchy)
                             {
                                 mover.MoveToHole(hole);
+                                movedCount++;
                                 break;
                             }
                         }
                     }
 
-                    Debug.Log($"[PlayerController] Total characters moved: {charactersToMove.Count}");
+                    Debug.Log($"[PlayerController] Total characters moved: {movedCount}");
 
+                    // Step 4: Clean up stale character data
+                    gridObjectDetection.CleanupInactiveCharacters();
                 }
+            }
             }
         }
     }
-}
+
 

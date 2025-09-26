@@ -87,6 +87,22 @@ namespace SlowpokeStudio.Grid
             }
         }
 
+        public void CleanupInactiveCharacters()
+        {
+            characterDataList.RemoveAll(data =>
+            {
+                Vector3 worldPos = GridManager.Instance.GetWorldPosition(data.gridPosition.x, data.gridPosition.y);
+                Collider[] hits = Physics.OverlapSphere(worldPos, 0.1f);
+                foreach (var hit in hits)
+                {
+                    CharacterManager cm = hit.GetComponent<CharacterManager>();
+                    if (cm != null && cm.gameObject.activeInHierarchy)
+                        return false;
+                }
+                return true; // remove if no active character found
+            });
+        }
+
         public List<GridObjectData> GetAdjacentSameColorCharacters(Vector2Int currentPos, ObjectColor color)
         {
             List<GridObjectData> sameColorNeighbors = new List<GridObjectData>();
