@@ -342,14 +342,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa0f1eea79d7738478a9ed1b9d02d0d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 10
-  columns: 10
+  gridWidth: 10
+  gridHeight: 10
   cellSize: 1
-  gridOrigin: {x: 0, y: 0, z: 0}
-  showGridGizmos: 1
-  gridColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  gridObjectDetection: {fileID: 1063701873159195296}
+  originPosition: {x: 0, y: 0, z: 0}
   pathCheckSystem: {fileID: 8746548323192073660}
+  gridObjectDetection: {fileID: 1063701873159195296}
 --- !u!114 &1395397794275662606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,6 +500,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cb941ed72a7b640b48cea7f22bcf1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridWidth: 10
+  gridHeight: 10
+  characterLookupRadius: 0.2
 --- !u!1 &6176110032511113169
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,6 +615,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cb941ed72a7b640b48cea7f22bcf1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridWidth: 10
+  gridHeight: 10
+  characterLookupRadius: 0.2
 --- !u!1 &8855289909064260455
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SlowpokeStudio.Grid
 {
@@ -6,104 +6,98 @@ namespace SlowpokeStudio.Grid
 
     public class GridManager : MonoBehaviour
     {
+        public static GridManager Instance { get; private set; }
+
         [Header("Grid Settings")]
-        [SerializeField] internal int rows = 6;
-        [SerializeField] internal int columns = 6;
+        [SerializeField] private int gridWidth = 10;
+        [SerializeField] private int gridHeight = 10;
         [SerializeField] private float cellSize = 1f;
-        [SerializeField] private Vector3 gridOrigin = Vector3.zero;
-
-        [Header("Debug Options")]
-        [SerializeField] private bool showGridGizmos = true;
-        [SerializeField] private Color gridColor = Color.yellow;
-
-        [SerializeField] internal GridObjectDetection gridObjectDetection;
-        [SerializeField] internal GridPathHandler pathCheckSystem;
+        [SerializeField] private Vector3 originPosition = Vector3.zero;
 
         private CellType[,] gridArray;
-        public static GridManager Instance { get; private set; }
+
+        [Header("System References")]
+        public GridPathHandler pathCheckSystem;
+        public GridObjectDetection gridObjectDetection;
 
         private void Awake()
         {
-            if(Instance != null && Instance != this)
+            if (Instance != null && Instance != this)
             {
-                Debug.LogWarning("[GridManager] Duplicate instance found. Destroying this one.");
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
-        
-        InitializeGrid();
+
+            gridArray = new CellType[gridWidth, gridHeight];
+            InitializeGrid();
         }
 
         private void InitializeGrid()
         {
-            gridArray = new CellType[columns, rows];
-
-            // Fill with Empty
-            for (int x = 0; x < columns; x++)
+            for (int x = 0; x < gridWidth; x++)
             {
-                for (int y = 0; y < rows; y++)
+                for (int y = 0; y < gridHeight; y++)
                 {
                     gridArray[x, y] = CellType.Empty;
-                    //Debug.Log($"[GridManager] Cell ({x},{y}) initialized as {gridArray[x, y]}");
                 }
             }
+
+            Debug.Log("[GridManager] Grid initialized.");
         }
 
-        #region Helper Methods
-        public Vector3 GetWorldPosition(int x, int y)
+        // ✅ API Methods
+        public CellType GetCell(int x, int y)
         {
-            return gridOrigin + new Vector3(x + 0.5f, 0, y + 0.5f) * cellSize; //new Vector3(x, 0, y) * cellSize;
-        }
-
-        public Vector2Int GetGridPosition(Vector3 worldPosition)
-        {
-            int x = Mathf.FloorToInt((worldPosition - gridOrigin).x / cellSize);
-            int y = Mathf.FloorToInt((worldPosition - gridOrigin).z / cellSize);
-            return new Vector2Int(x, y);
-        }
-
-        public bool IsInsideGrid(int x, int y)
-        {
-            return x >= 0 && y >= 0 && x < columns && y < rows;
+            if (IsWithinBounds(x, y))
+                return gridArray[x, y];
+            return CellType.Empty;
         }
 
         public void SetCell(int x, int y, CellType type)
         {
-            if (IsInsideGrid(x, y))
+            if (IsWithinBounds(x, y))
             {
                 gridArray[x, y] = type;
                 Debug.Log($"[GridManager] Cell ({x},{y}) set to {type}");
             }
         }
 
-        public CellType GetCell(int x, int y)
+        public bool IsWithinBounds(int x, int y)
         {
-            if (IsInsideGrid(x, y))
-                return gridArray[x, y];
-
-            return CellType.Empty;
+            return x >= 0 && y >= 0 && x < gridWidth && y < gridHeight;
         }
-        #endregion
 
-        #region Gizmos
+        // ✅ Position Conversions
+        public Vector2Int GetGridPosition(Vector3 worldPosition)
+        {
+            int x = Mathf.RoundToInt((worldPosition.x - originPosition.x) / cellSize);
+            int y = Mathf.RoundToInt((worldPosition.z - originPosition.z) / cellSize); // assuming grid in XZ plane
+            return new Vector2Int(x, y);
+        }
+
+        public Vector3 GetWorldPosition(int x, int y)
+        {
+            return new Vector3(
+                x * cellSize + originPosition.x,
+                originPosition.y,
+                y * cellSize + originPosition.z
+            );
+        }
+
+        // ✅ Debugging
         private void OnDrawGizmos()
         {
-            if (!showGridGizmos) return;
-
-            Gizmos.color = gridColor;
-
-            for (int x = 0; x < columns; x++)
+            Gizmos.color = Color.gray;
+            for (int x = 0; x < gridWidth; x++)
             {
-                for (int y = 0; y < rows; y++)
+                for (int y = 0; y < gridHeight; y++)
                 {
                     Vector3 pos = GetWorldPosition(x, y);
-                    Gizmos.DrawWireCube(pos, Vector3.one * (cellSize - 0.05f));
+                    Gizmos.DrawWireCube(pos, new Vector3(cellSize, 0.1f, cellSize));
                 }
             }
         }
-        #endregion
     }
 }
 
