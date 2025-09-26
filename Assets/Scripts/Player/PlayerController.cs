@@ -61,7 +61,7 @@ namespace SlowpokeStudio.Gameplay
                     Vector2Int holeGridPos = gridManager.GetGridPosition(hole.transform.position);
 
                     // 🔹 NEW: Ask BFS for all reachable characters + paths
-                    var reachable = pathCheckSystem.GetReachableCharactersAndPaths(holeGridPos, hole.holeColor);
+                    var reachable = pathCheckSystem.CollectReachableFromHole(holeGridPos, hole.holeColor);
 
                     int movedCount = 0;
 
