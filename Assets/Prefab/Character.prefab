@@ -120,7 +120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   stopDistanceToHole: 0.1
-  character: {fileID: 0}
+  character: {fileID: 7425981623536743943}
 --- !u!65 &3598253216406675964
 BoxCollider:
   m_ObjectHideFlags: 0

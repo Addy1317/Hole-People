@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 1395397794275662606}
   - component: {fileID: 1541918606441801068}
   - component: {fileID: 1063701873159195296}
+  - component: {fileID: 8746548323192073660}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -347,6 +348,8 @@ MonoBehaviour:
   gridOrigin: {x: 0, y: 0, z: 0}
   showGridGizmos: 1
   gridColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  gridObjectDetection: {fileID: 1063701873159195296}
+  pathCheckSystem: {fileID: 8746548323192073660}
 --- !u!114 &1395397794275662606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,9 +488,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8677277367c1494992ef54d858d6ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridManager: {fileID: 2370482138258679802}
   characterDataList: []
   holeDataList: []
+--- !u!114 &8746548323192073660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4702770191006619838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50cb941ed72a7b640b48cea7f22bcf1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6176110032511113169
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,8 +614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50cb941ed72a7b640b48cea7f22bcf1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridManager: {fileID: 2370482138258679802}
-  objectDetection: {fileID: 1063701873159195296}
 --- !u!1 &8855289909064260455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1067,6 +1079,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 12deb5b02a6d7b148bb388c76bc2b160, type: 2}
+    - target: {fileID: 1858995799097480095, guid: 09b08702d957489449ec049c4d49fada, type: 3}
+      propertyPath: characterColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1871192097022592703, guid: 09b08702d957489449ec049c4d49fada, type: 3}
       propertyPath: Color
       value: 2
@@ -1647,6 +1663,10 @@ PrefabInstance:
       propertyPath: characterColor
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8286998135319943993, guid: 09b08702d957489449ec049c4d49fada, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d41a3e359dc2c342a53d0f018cb8619, type: 2}
     - target: {fileID: 8303196793818779161, guid: 09b08702d957489449ec049c4d49fada, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
