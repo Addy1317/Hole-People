@@ -46,7 +46,7 @@ namespace SlowpokeStudio.Grid
                 for (int y = 0; y < rows; y++)
                 {
                     gridArray[x, y] = CellType.Empty;
-                    Debug.Log($"[GridManager] Cell ({x},{y}) initialized as {gridArray[x, y]}");
+                    //Debug.Log($"[GridManager] Cell ({x},{y}) initialized as {gridArray[x, y]}");
                 }
             }
         }

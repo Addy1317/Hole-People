@@ -6,15 +6,23 @@ using SlowpokeStudio.ManHole;
 namespace SlowpokeStudio.Grid
 {
     [System.Serializable]
-    public struct GridObjectData
+    public class GridObjectData
     {
         public Vector2Int gridPosition;
         public ObjectColor color;
+        public CharacterManager characterRef;
 
-        public GridObjectData(Vector2Int pos, ObjectColor col)
+        public GridObjectData(Vector2Int gridPosition, ObjectColor color, CharacterManager characterRef)
         {
-            gridPosition = pos;
-            color = col;
+            this.gridPosition = gridPosition;
+            this.color = color;
+            this.characterRef = characterRef;
+        }
+        public GridObjectData(Vector2Int gridPosition, ObjectColor color)
+        {
+            this.gridPosition = gridPosition;
+            this.color = color;
+            this.characterRef = null;
         }
     }
 
@@ -43,6 +51,7 @@ namespace SlowpokeStudio.Grid
 
                 Vector2Int gridPos = GridManager.Instance.GetGridPosition(obj.transform.position);
                 characterDataList.Add(new GridObjectData(gridPos, character.characterColor));
+                GridManager.Instance.SetCell(gridPos.x, gridPos.y, CellType.Character);
                 Debug.Log($"[GridObjectDetection] Character detected at {gridPos} with color {character.characterColor}");
             }
 
@@ -56,6 +65,8 @@ namespace SlowpokeStudio.Grid
 
                 Vector2Int gridPos = GridManager.Instance.GetGridPosition(obj.transform.position);
                 holeDataList.Add(new GridObjectData(gridPos, hole.holeColor));
+
+                GridManager.Instance.SetCell(gridPos.x, gridPos.y, CellType.Hole);
                 Debug.Log($"[GridObjectDetection] Hole detected at {gridPos} with color {hole.holeColor}");
             }
 
@@ -66,25 +77,6 @@ namespace SlowpokeStudio.Grid
         {
             characterDataList.RemoveAll(data => data.gridPosition == gridPos);
             Debug.Log($"[GridObjectDetection] Removed character at {gridPos}. Remaining: {characterDataList.Count}");
-        }
-
-        public void RefreshCharacterList()
-        {
-            characterDataList.Clear();
-
-            GameObject[] allCharacters = GameObject.FindGameObjectsWithTag("Character");
-
-            foreach (GameObject character in allCharacters)
-            {
-                var mover = character.GetComponent<CharacterManager>();
-                var data = new GridObjectData
-                {
-                    gridPosition = GridManager.Instance.GetGridPosition(character.transform.position),
-                    color = mover.GetColor()
-                };
-
-                characterDataList.Add(data);
-            }
         }
 
         public void CleanupInactiveCharacters()
@@ -101,6 +93,21 @@ namespace SlowpokeStudio.Grid
                 }
                 return true; // remove if no active character found
             });
+        }
+
+        public void UpdateCharacterPosition(CharacterManager character, Vector2Int oldPos, Vector2Int newPos)
+        {
+            for (int i = 0; i < characterDataList.Count; i++)
+            {
+                if (characterDataList[i].gridPosition == oldPos && characterDataList[i].characterRef == character)
+                {
+                    characterDataList[i].gridPosition = newPos;
+                    Debug.Log($"[GridObjectDetection] Moved character to {newPos}");
+                    return;
+                }
+            }
+
+            Debug.LogWarning($"[GridObjectDetection] Couldn't find character at {oldPos} to update!");
         }
 
         public List<GridObjectData> GetAdjacentSameColorCharacters(Vector2Int currentPos, ObjectColor color)
@@ -211,16 +218,22 @@ namespace SlowpokeStudio.Grid
         public List<GridObjectData> GetAllCharactersOfColor(ObjectColor color)
         {
             List<GridObjectData> result = new List<GridObjectData>();
-
             foreach (var data in characterDataList)
             {
                 if (data.color == color)
-                {
                     result.Add(data);
-                }
             }
-
             return result;
+        }
+
+        void OnDrawGizmos()
+        {
+            foreach (var data in characterDataList)
+            {
+                Gizmos.color = Color.red;
+                Vector3 pos = GridManager.Instance.GetWorldPosition(data.gridPosition.x, data.gridPosition.y);
+                Gizmos.DrawSphere(pos + Vector3.up * 0.5f, 0.2f);
+            }
         }
 
     }

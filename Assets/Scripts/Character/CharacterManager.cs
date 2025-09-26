@@ -18,11 +18,9 @@ namespace SlowpokeStudio.character
 
         [SerializeField] private Character character;
 
-        private void Awake()
+        public void Init(Vector2Int gridPos)
         {
-            //myColor = GetComponent<Character>().characterColor;
-           // myColor = character.characterColor;
-           
+            currentGridPos = gridPos;
         }
 
         public bool IsMovementFinished()
@@ -52,9 +50,9 @@ namespace SlowpokeStudio.character
             }
         }
 
-
         public void MoveToHole(Hole targetHole)
         {
+            Debug.Log($"[CharacterManager] MoveToHole called for {gameObject.name}");
             if (isMoving) return;
 
             if (targetHole == null)
@@ -95,6 +93,8 @@ namespace SlowpokeStudio.character
                 // Update GridManager
                 GridManager.Instance.SetCell(currentGridPos.x, currentGridPos.y, CellType.Empty);
                 GridManager.Instance.SetCell(nextPos.x, nextPos.y, CellType.Character);
+
+                GridManager.Instance.gridObjectDetection.UpdateCharacterPosition(this, currentGridPos, nextPos);
 
                 currentGridPos = nextPos;
             }

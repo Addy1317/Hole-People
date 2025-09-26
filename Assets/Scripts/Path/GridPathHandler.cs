@@ -35,7 +35,7 @@ namespace SlowpokeStudio.Grid
             return validCharacters;
         }
 
-        private bool IsPathClearVertical(Vector2Int hole, Vector2Int character)
+        internal bool IsPathClearVertical(Vector2Int hole, Vector2Int character)
         {
             int minY = Mathf.Min(hole.y, character.y) + 1;
             int maxY = Mathf.Max(hole.y, character.y);
@@ -48,7 +48,7 @@ namespace SlowpokeStudio.Grid
             return true;
         }
 
-        private bool IsPathClearHorizontal(Vector2Int hole, Vector2Int character)
+        internal bool IsPathClearHorizontal(Vector2Int hole, Vector2Int character)
         {
             int minX = Mathf.Min(hole.x, character.x) + 1;
             int maxX = Mathf.Max(hole.x, character.x);
@@ -70,6 +70,7 @@ namespace SlowpokeStudio.Grid
             return false;
         }
 
+      
 
     }
 }
