@@ -20,21 +20,12 @@ namespace SlowpokeStudio.Grid
 
     public class GridObjectDetection : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private GridManager gridManager;
-
         [Header("Detected Objects")]
         public List<GridObjectData> characterDataList = new List<GridObjectData>();
         public List<GridObjectData> holeDataList = new List<GridObjectData>();
 
         private void Start()
         {
-            if (gridManager == null)
-            {
-                Debug.LogError("[GridObjectDetection] GridManager not assigned!");
-                return;
-            }
-
             DetectSceneObjects();
         }
 
@@ -50,7 +41,7 @@ namespace SlowpokeStudio.Grid
                 Character character = obj.GetComponent<Character>();
                 if (character == null) continue;
 
-                Vector2Int gridPos = gridManager.GetGridPosition(obj.transform.position);
+                Vector2Int gridPos = GridManager.Instance.GetGridPosition(obj.transform.position);
                 characterDataList.Add(new GridObjectData(gridPos, character.characterColor));
                 Debug.Log($"[GridObjectDetection] Character detected at {gridPos} with color {character.characterColor}");
             }
@@ -63,7 +54,7 @@ namespace SlowpokeStudio.Grid
                 Hole hole = obj.GetComponent<Hole>();
                 if (hole == null) continue;
 
-                Vector2Int gridPos = gridManager.GetGridPosition(obj.transform.position);
+                Vector2Int gridPos = GridManager.Instance.GetGridPosition(obj.transform.position);
                 holeDataList.Add(new GridObjectData(gridPos, hole.holeColor));
                 Debug.Log($"[GridObjectDetection] Hole detected at {gridPos} with color {hole.holeColor}");
             }
@@ -84,10 +75,10 @@ namespace SlowpokeStudio.Grid
 
             foreach (GameObject character in allCharacters)
             {
-                var mover = character.GetComponent<CharacterMover>();
+                var mover = character.GetComponent<CharacterManager>();
                 var data = new GridObjectData
                 {
-                    gridPosition = gridManager.GetGridPosition(character.transform.position),
+                    gridPosition = GridManager.Instance.GetGridPosition(character.transform.position),
                     color = mover.GetColor()
                 };
 

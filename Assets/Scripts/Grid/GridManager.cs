@@ -16,9 +16,10 @@ namespace SlowpokeStudio.Grid
         [SerializeField] private bool showGridGizmos = true;
         [SerializeField] private Color gridColor = Color.yellow;
 
-        private CellType[,] gridArray;
         [SerializeField] internal GridObjectDetection gridObjectDetection;
+        [SerializeField] internal GridPathHandler pathCheckSystem;
 
+        private CellType[,] gridArray;
         public static GridManager Instance { get; private set; }
 
         private void Awake()

@@ -14,7 +14,7 @@ namespace SlowpokeStudio.Gameplay
 
         // References
         private GridManager gridManager;
-        private PathCheckSystem pathCheckSystem;
+        private GridPathHandler pathCheckSystem;
 
         private void Awake()
         {
@@ -26,8 +26,8 @@ namespace SlowpokeStudio.Gameplay
 
         private void FindLevelReferences()
         {
-            gridManager = FindObjectOfType<GridManager>();
-            pathCheckSystem = FindObjectOfType<PathCheckSystem>();
+            gridManager = GridManager.Instance;//FindObjectOfType<GridManager>();
+            pathCheckSystem = GridManager.Instance.pathCheckSystem;//FindObjectOfType<PathCheckSystem>();
 
             if (gridManager == null || pathCheckSystem == null)
             {
@@ -69,7 +69,7 @@ namespace SlowpokeStudio.Gameplay
 
                         foreach (Collider col in hits)
                         {
-                            CharacterMover mover = col.GetComponent<CharacterMover>();
+                            CharacterManager mover = col.GetComponent<CharacterManager>();
                             if (mover != null)
                             {
                                 mover.MoveToHole(hole);
@@ -80,6 +80,5 @@ namespace SlowpokeStudio.Gameplay
                 }
             }
         }
-    }
-    
+    }  
 }

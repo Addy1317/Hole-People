@@ -6,44 +6,49 @@ using UnityEngine;
 
 namespace SlowpokeStudio.character
 {
-    public class CharacterMover : MonoBehaviour
+    public class CharacterManager : MonoBehaviour
     {
         [Header("Movement Settings")]
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float stopDistanceToHole = 0.1f;
 
-        private GridManager gridManager;
         private Vector2Int currentGridPos;
         private ObjectColor myColor;
         private bool isMoving = false;
 
+        [SerializeField] private Character character;
+
         private void Awake()
         {
-            myColor = GetComponent<Character>().characterColor;
+            //myColor = GetComponent<Character>().characterColor;
+           // myColor = character.characterColor;
            
+        }
+
+        public ObjectColor GetColor()
+        {
+            return character.characterColor;
         }
 
         public void MoveToHole(Hole targetHole)
         {
             if (isMoving) return;
 
-            if (gridManager == null)
+            if (targetHole == null)
             {
-                gridManager = GridManager.Instance;
-
-                if (gridManager == null)
-                {
-                    Debug.LogError("[CharacterMover] GridManager is still null when trying to move character!");
-                    return;
-                }
-
-                currentGridPos = gridManager.GetGridPosition(transform.position);
+                Debug.LogError("[CharacterMover] Target hole is null!");
+                return;
             }
 
-            Vector2Int holeGridPos = gridManager.GetGridPosition(targetHole.transform.position);
+            if (targetHole.holeCenter == null)
+            {
+                Debug.LogError($"[CharacterMover] Hole center is NOT assigned for: {targetHole.name}");
+                return;
+            }
+
+            Vector2Int holeGridPos = GridManager.Instance.GetGridPosition(targetHole.transform.position);
             StartCoroutine(MoveStepByStep(holeGridPos, targetHole));
-        }
-        
+        }   
 
         private IEnumerator MoveStepByStep(Vector2Int targetGridPos, Hole targetHole)
         {
@@ -59,14 +64,14 @@ namespace SlowpokeStudio.character
 
             foreach (var nextPos in path)
             {
-                Vector3 worldTarget = gridManager.GetWorldPosition(nextPos.x, nextPos.y);
+                Vector3 worldTarget = GridManager.Instance.GetWorldPosition(nextPos.x, nextPos.y);
 
                 // Move to next cell
                 yield return StartCoroutine(MoveToWorldPosition(worldTarget));
 
                 // Update GridManager
-                gridManager.SetCell(currentGridPos.x, currentGridPos.y, CellType.Empty);
-                gridManager.SetCell(nextPos.x, nextPos.y, CellType.Character);
+                GridManager.Instance.SetCell(currentGridPos.x, currentGridPos.y, CellType.Empty);
+                GridManager.Instance.SetCell(nextPos.x, nextPos.y, CellType.Character);
 
                 currentGridPos = nextPos;
             }
@@ -80,7 +85,7 @@ namespace SlowpokeStudio.character
             }
 
             // Deactivate and clear grid cell
-            gridManager.SetCell(currentGridPos.x, currentGridPos.y, CellType.Empty);
+            GridManager.Instance.SetCell(currentGridPos.x, currentGridPos.y, CellType.Empty);
             gameObject.SetActive(false); // or Destroy(gameObject);
 
             GridManager.Instance.gridObjectDetection.RemoveCharacterAt(currentGridPos);

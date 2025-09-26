@@ -1,21 +1,16 @@
 ﻿using SlowpokeStudio.character;
-using SlowpokeStudio.Grid;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlowpokeStudio.Grid
 {
-    public class PathCheckSystem : MonoBehaviour
+    public class GridPathHandler : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private GridManager gridManager;
-        [SerializeField] private GridObjectDetection objectDetection;
-
         public List<GridObjectData> GetMovableCharacters(Vector2Int holePos, ObjectColor targetColor)
         {
             List<GridObjectData> validCharacters = new List<GridObjectData>();
 
-            foreach (GridObjectData charData in objectDetection.characterDataList)
+            foreach (GridObjectData charData in GridManager.Instance.gridObjectDetection.characterDataList) 
             {
                 // Color Match
                 if (charData.color != targetColor)
@@ -47,7 +42,7 @@ namespace SlowpokeStudio.Grid
 
             for (int y = minY; y < maxY; y++)
             {
-                if (gridManager.GetCell(hole.x, y) != CellType.Empty)
+                if (GridManager.Instance.GetCell(hole.x, y) != CellType.Empty)
                     return false;
             }
             return true;
@@ -60,7 +55,7 @@ namespace SlowpokeStudio.Grid
 
             for (int x = minX; x < maxX; x++)
             {
-                if (gridManager.GetCell(x, hole.y) != CellType.Empty)
+                if (GridManager.Instance.GetCell(x, hole.y) != CellType.Empty)
                     return false;
             }
             return true;
