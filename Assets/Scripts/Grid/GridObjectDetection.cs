@@ -105,40 +105,48 @@ namespace SlowpokeStudio.Grid
 
         public List<GridObjectData> GetAdjacentSameColorCharacters(Vector2Int currentPos, ObjectColor color)
         {
-            List<GridObjectData> sameColorNeighbors = new List<GridObjectData>();
+            List<GridObjectData> result = new List<GridObjectData>();
+            HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+            Queue<Vector2Int> toVisit = new Queue<Vector2Int>();
 
-            // Build quick lookup dictionary
-            Dictionary<Vector2Int, GridObjectData> characterMap = new Dictionary<Vector2Int, GridObjectData>();
-            foreach (var data in characterDataList)
+            toVisit.Enqueue(currentPos);
+            visited.Add(currentPos);
+
+            while (toVisit.Count > 0)
             {
-                if (!characterMap.ContainsKey(data.gridPosition))
-                    characterMap.Add(data.gridPosition, data);
-            }
+                Vector2Int current = toVisit.Dequeue();
 
-            // 4 Directions: Up, Right, Down, Left
-            Vector2Int[] directions = new Vector2Int[]
-            {
-        new Vector2Int(0, 1),
-        new Vector2Int(1, 0),
-        new Vector2Int(0, -1),
-        new Vector2Int(-1, 0),
-            };
-
-            foreach (Vector2Int dir in directions)
-            {
-                Vector2Int neighborPos = currentPos + dir;
-
-                if (characterMap.TryGetValue(neighborPos, out GridObjectData neighbor))
+                GridObjectData currentData = characterDataList.Find(data => data.gridPosition == current && data.color == color);
+                if (!EqualityComparer<GridObjectData>.Default.Equals(currentData, default))
                 {
-                    if (neighbor.color == color)
+                    result.Add(currentData);
+
+                    // Check 4 directions
+                    Vector2Int[] directions = new Vector2Int[]
                     {
-                        sameColorNeighbors.Add(neighbor);
-                        Debug.Log($"[GridObjectDetection] Same-color neighbor found at {neighborPos}");
+                Vector2Int.up,
+                Vector2Int.down,
+                Vector2Int.left,
+                Vector2Int.right
+                    };
+
+                    foreach (Vector2Int dir in directions)
+                    {
+                        Vector2Int neighbor = current + dir;
+                        if (!visited.Contains(neighbor))
+                        {
+                            var neighborData = characterDataList.Find(data => data.gridPosition == neighbor && data.color == color);
+                            if (!EqualityComparer<GridObjectData>.Default.Equals(neighborData, default))
+                            {
+                                toVisit.Enqueue(neighbor);
+                                visited.Add(neighbor);
+                            }
+                        }
                     }
                 }
             }
 
-            return sameColorNeighbors;
+            return result;
         }
 
         public List<CharacterManager> GetConnectedCharactersFrom(Vector2Int holePos, ObjectColor targetColor)
@@ -199,6 +207,22 @@ namespace SlowpokeStudio.Grid
             Debug.Log($"[GridObjectDetection] Connected characters to Hole at {holePos}: {result.Count}");
             return result;
         }
+
+        public List<GridObjectData> GetAllCharactersOfColor(ObjectColor color)
+        {
+            List<GridObjectData> result = new List<GridObjectData>();
+
+            foreach (var data in characterDataList)
+            {
+                if (data.color == color)
+                {
+                    result.Add(data);
+                }
+            }
+
+            return result;
+        }
+
     }
 }
 

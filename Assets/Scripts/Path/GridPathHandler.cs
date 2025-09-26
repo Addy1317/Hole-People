@@ -60,6 +60,17 @@ namespace SlowpokeStudio.Grid
             }
             return true;
         }
+        public bool HasClearPath(Vector2Int holePos, Vector2Int charPos)
+        {
+            if (charPos.x == holePos.x)
+                return IsPathClearVertical(holePos, charPos);
+            else if (charPos.y == holePos.y)
+                return IsPathClearHorizontal(holePos, charPos);
+
+            return false;
+        }
+
+
     }
 }
 

@@ -47,7 +47,7 @@ namespace SlowpokeStudio.Gameplay
 
         private void DetectHoleTap()
         {
-            if (gridManager == null || pathCheckSystem == null)
+            if (gridManager == null || pathCheckSystem == null || gridObjectDetection == null)
                 return;
 
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -60,27 +60,22 @@ namespace SlowpokeStudio.Gameplay
 
                     Vector2Int holeGridPos = gridManager.GetGridPosition(hole.transform.position);
 
-                    // Step 1: Get characters that can move directly
-                    List<GridObjectData> directMovableCharacters = pathCheckSystem.GetMovableCharacters(holeGridPos, hole.holeColor);
+                    // Step 1: Get ALL characters (including those newly unblocked) who now have path to hole
+                    List<GridObjectData> validPathCharacters = pathCheckSystem.GetMovableCharacters(holeGridPos, hole.holeColor);
 
-                    // Step 2: Track all characters to move
-                    HashSet<Vector2Int> charactersToMove = new HashSet<Vector2Int>();
+                    // Step 2: BFS from each valid character to collect all adjacent same-colored ones
+                    HashSet<Vector2Int> finalCharactersToMove = new HashSet<Vector2Int>();
 
-                    foreach (var charData in directMovableCharacters)
+                    foreach (var charData in validPathCharacters)
                     {
-                        // Get connected neighbors of same color
                         List<GridObjectData> connected = gridObjectDetection.GetAdjacentSameColorCharacters(charData.gridPosition, charData.color);
 
-                        // Add all to final set (avoids duplicates)
-                        foreach (var c in connected)
-                        {
-                            charactersToMove.Add(c.gridPosition);
-                        }
+                        foreach (var data in connected)
+                            finalCharactersToMove.Add(data.gridPosition);
                     }
 
-                    // Step 3: Move all collected characters
-                    int movedCount = 0;
-                    foreach (Vector2Int gridPos in charactersToMove)
+                    // Step 3: Move All Collected Characters
+                    foreach (Vector2Int gridPos in finalCharactersToMove)
                     {
                         Vector3 worldPos = gridManager.GetWorldPosition(gridPos.x, gridPos.y);
                         Collider[] hits = Physics.OverlapSphere(worldPos, 0.1f);
@@ -88,23 +83,20 @@ namespace SlowpokeStudio.Gameplay
                         foreach (Collider col in hits)
                         {
                             CharacterManager mover = col.GetComponent<CharacterManager>();
-                            if (mover != null && mover.gameObject.activeInHierarchy)
+                            if (mover != null)
                             {
                                 mover.MoveToHole(hole);
-                                movedCount++;
                                 break;
                             }
                         }
                     }
 
-                    Debug.Log($"[PlayerController] Total characters moved: {movedCount}");
-
-                    // Step 4: Clean up stale character data
-                    gridObjectDetection.CleanupInactiveCharacters();
+                    Debug.Log($"[PlayerController] Total characters moved on tap: {finalCharactersToMove.Count}");
                 }
             }
-            }
+            
         }
     }
+}
 
 
