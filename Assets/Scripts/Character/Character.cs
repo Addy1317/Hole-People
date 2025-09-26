@@ -1,13 +1,13 @@
-using SlowpokeStudio.character;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace SlowpokeStudio.Hole
+namespace SlowpokeStudio.character
 {
-    public class HoleColor : MonoBehaviour
+    public enum ObjectColor { Red, Blue, Green, Yellow }
+    public class Character : MonoBehaviour
     {
         [Header("Assigned on prefab or in Inspector")]
-        public ObjectColor Color;
+        public ObjectColor characterColor;
 
         [Header("Material Mapping")]
         public Material redMat;
@@ -51,7 +51,7 @@ namespace SlowpokeStudio.Hole
         {
             if (_renderer == null) return;
 
-            switch (Color)
+            switch (characterColor)
             {
                 case ObjectColor.Red:
                     _renderer.sharedMaterial = redMat;
@@ -68,5 +68,5 @@ namespace SlowpokeStudio.Hole
             }
         }
     }
-}
 
+}

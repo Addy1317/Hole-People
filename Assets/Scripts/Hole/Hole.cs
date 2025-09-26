@@ -1,13 +1,15 @@
-﻿using UnityEditor;
+using SlowpokeStudio.character;
+using UnityEditor;
 using UnityEngine;
 
-namespace SlowpokeStudio.character
+namespace SlowpokeStudio.ManHole
 {
-    public enum ObjectColor { Red, Blue, Green, Yellow }
-    public class CharacterColor : MonoBehaviour
+    public class Hole : MonoBehaviour
     {
+        public Transform holeCenter;
+
         [Header("Assigned on prefab or in Inspector")]
-        public ObjectColor characterColor;
+        public ObjectColor holeColor;
 
         [Header("Material Mapping")]
         public Material redMat;
@@ -21,6 +23,9 @@ namespace SlowpokeStudio.character
         {
             if (_renderer == null)
                 _renderer = GetComponent<Renderer>();
+
+            if (holeCenter == null)
+                Debug.LogError($"[Hole] HoleCenter is not assigned in {gameObject.name}");
 
             ApplyColor();
         }
@@ -51,7 +56,7 @@ namespace SlowpokeStudio.character
         {
             if (_renderer == null) return;
 
-            switch (characterColor)
+            switch (holeColor)
             {
                 case ObjectColor.Red:
                     _renderer.sharedMaterial = redMat;
@@ -68,5 +73,5 @@ namespace SlowpokeStudio.character
             }
         }
     }
-
 }
+

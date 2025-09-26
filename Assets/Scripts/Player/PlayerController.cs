@@ -1,4 +1,7 @@
-﻿using SlowpokeStudio.Hole;
+﻿using SlowpokeStudio.character;
+using SlowpokeStudio.Grid;
+using SlowpokeStudio.ManHole;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlowpokeStudio.Gameplay
@@ -9,15 +12,32 @@ namespace SlowpokeStudio.Gameplay
         [SerializeField] private Camera mainCamera;
         [SerializeField] private float rayDistance = 100f;
 
+        // References
+        private GridManager gridManager;
+        private PathCheckSystem pathCheckSystem;
+
         private void Awake()
         {
             if (mainCamera == null)
                 mainCamera = Camera.main;
+
+            FindLevelReferences();
+        }
+
+        private void FindLevelReferences()
+        {
+            gridManager = FindObjectOfType<GridManager>();
+            pathCheckSystem = FindObjectOfType<PathCheckSystem>();
+
+            if (gridManager == null || pathCheckSystem == null)
+            {
+                Debug.LogError("[PlayerController] Missing GridManager or PathCheckSystem in level.");
+            }
         }
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0)) // tap/click
+            if (Input.GetMouseButtonDown(0))
             {
                 DetectHoleTap();
             }
@@ -25,20 +45,41 @@ namespace SlowpokeStudio.Gameplay
 
         private void DetectHoleTap()
         {
+            if (gridManager == null || pathCheckSystem == null)
+                return;
+
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
             {
-                HoleColor hole = hit.collider.GetComponent<HoleColor>();
+                Hole hole = hit.collider.GetComponent<Hole>();
                 if (hole != null)
                 {
-                    Debug.Log($"[PlayerController] Tapped Hole with color: {hole.Color}");
-                    // 👇 Later we’ll notify GridManager here
-                }
-                else
-                {
-                    Debug.Log("[PlayerController] Tapped something that is not a hole.");
+                    Debug.Log($"[PlayerController] Tapped Hole with color: {hole.holeColor}");
+
+                    Vector2Int holeGridPos = gridManager.GetGridPosition(hole.transform.position);
+
+                    // Get characters that can move to this hole
+                    List<GridObjectData> validCharacters = pathCheckSystem.GetMovableCharacters(holeGridPos, hole.holeColor);
+
+                    // Move each one
+                    foreach (var charData in validCharacters)
+                    {
+                        Vector3 worldPos = gridManager.GetWorldPosition(charData.gridPosition.x, charData.gridPosition.y);
+                        Collider[] hits = Physics.OverlapSphere(worldPos, 0.1f);
+
+                        foreach (Collider col in hits)
+                        {
+                            CharacterMover mover = col.GetComponent<CharacterMover>();
+                            if (mover != null)
+                            {
+                                mover.MoveToHole(hole);
+                                break; // found the one at that cell
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+    
 }

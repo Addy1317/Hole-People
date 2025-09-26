@@ -17,10 +17,22 @@ namespace SlowpokeStudio.Grid
         [SerializeField] private Color gridColor = Color.yellow;
 
         private CellType[,] gridArray;
+        [SerializeField] internal GridObjectDetection gridObjectDetection;
+
+        public static GridManager Instance { get; private set; }
 
         private void Awake()
         {
-            InitializeGrid();
+            if(Instance != null && Instance != this)
+            {
+                Debug.LogWarning("[GridManager] Duplicate instance found. Destroying this one.");
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        
+        InitializeGrid();
         }
 
         private void InitializeGrid()
