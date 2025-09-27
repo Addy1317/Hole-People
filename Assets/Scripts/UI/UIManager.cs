@@ -2,6 +2,8 @@
 // UIManager is responsible for managing and updating the game's UI elements, including health, wave count, kills, currency, and tower selection.
 // It updates the UI when certain events happen, such as enemy deaths or health changes.
 #endregion
+using SlowpokeStudio.Manager;
+using SlowpokeStudio.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,6 +49,15 @@ namespace SlowpokeStudio.UI
             mainMenuUI.SetActive(true);
         }
 
+        private void Start()
+        {
+            GameService.Instance.eventManager.OnLevelCompleteEvent.AddListener(OnLevelCompleteButton);
+        }
+
+        private void OnDestroy()
+        {
+            GameService.Instance.eventManager.OnLevelCompleteEvent.RemoveListener(OnLevelCompleteButton);
+        }
         private void OnEnable()
         {
             playButton.onClick.AddListener(OnplayButton);
@@ -59,7 +70,7 @@ namespace SlowpokeStudio.UI
             settingsQuitButton.onClick.AddListener(OnSettingsQuitButton);
             settingsPanelCloseButton.onClick.AddListener(OnSettingsCloseButton);
 
-            nextLevelButton.onClick.AddListener(OnNextLevelButton);
+            nextLevelButton.onClick.AddListener(OnLevelCompleteButton);
 
             levelFailReplayButton.onClick.AddListener(OnLevelFailReplayButton);
             levelFailHomeButton.onClick.AddListener(OnLevelFailHomeButton);
@@ -78,7 +89,7 @@ namespace SlowpokeStudio.UI
             settingsQuitButton.onClick.RemoveListener(OnSettingsQuitButton);
             settingsPanelCloseButton.onClick.RemoveListener(OnSettingsCloseButton);
 
-            nextLevelButton.onClick.RemoveListener(OnNextLevelButton);
+            nextLevelButton.onClick.RemoveListener(OnLevelCompleteButton);
 
             levelFailReplayButton.onClick.RemoveListener(OnLevelFailReplayButton);
             levelFailHomeButton.onClick.RemoveListener(OnLevelFailHomeButton);
@@ -133,8 +144,9 @@ namespace SlowpokeStudio.UI
         #endregion
 
         #region Level COmpletion UI Button Method
-        private void OnNextLevelButton()
+        private void OnLevelCompleteButton()
         {
+            levelCompletePanel.SetActive(true);
             Debug.Log("On Next Level Button Clicked");
         }
         #endregion

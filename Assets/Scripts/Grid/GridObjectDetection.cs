@@ -1,7 +1,9 @@
 ﻿using SlowpokeStudio.character;
+using SlowpokeStudio.Manager;
+using SlowpokeStudio.ManHole;
+using SlowpokeStudio.Services;
 using System.Collections.Generic;
 using UnityEngine;
-using SlowpokeStudio.ManHole;
 
 namespace SlowpokeStudio.Grid
 {
@@ -295,6 +297,7 @@ namespace SlowpokeStudio.Grid
             characterMap.Remove(gridPos);
 
             Debug.Log($"[GridObjectDetection] Removed character at {gridPos}. Remaining: {characterDataList.Count}");
+            CheckForLevelCompletion();
         }
 
         // ✅ Update character’s grid position
@@ -320,6 +323,25 @@ namespace SlowpokeStudio.Grid
             }
 
             Debug.Log($"[GridObjectDetection] Character moved from {oldPos} → {newPos}");
+        }
+
+        private void CheckForLevelCompletion()
+        {
+            if (characterDataList.Count == 0)
+            {
+                Debug.Log("[GridObjectDetection] All characters cleared → Level Complete!");
+
+                // 🔹 Broadcast via EventManager
+                if (GameService.Instance != null && GameService.Instance.eventManager != null)
+                {
+                    
+                    GameService.Instance.eventManager.OnLevelCompleteEvent.InvokeEvent();
+                }
+                else
+                {
+                    Debug.LogWarning("[GridObjectDetection] Could not invoke OnLevelCompleteEvent → EventManager missing!");
+                }
+            }
         }
 
         // ✅ Cleanup inactive characters (destroyed or deactivated)

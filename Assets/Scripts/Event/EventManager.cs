@@ -10,14 +10,10 @@ namespace SlowpokeStudio.Event
     public class EventManager : MonoBehaviour
     {
         public EventController OnLevelCompleteEvent { get; private set; }
-        public EventController OnNextCompletedEvent { get; private set; }
-        //public EventsController<float> OnEnemyDeathEvent { get; private set; }
 
         public EventManager()
         {
             OnLevelCompleteEvent = new EventController();
-            OnNextCompletedEvent = new EventController();
-            //OnEnemyDeathEvent = new EventsController<float>();
         }
     }
 }
