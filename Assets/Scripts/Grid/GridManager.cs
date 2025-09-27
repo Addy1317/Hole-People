@@ -24,13 +24,20 @@ namespace SlowpokeStudio.Grid
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(gameObject);
+               Destroy(gameObject);
                 return;
             }
             Instance = this;
 
             gridArray = new CellType[gridWidth, gridHeight];
             InitializeGrid();
+        }
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;   // ✅ frees slot for the next Level prefab
+            }
         }
 
         private void InitializeGrid()

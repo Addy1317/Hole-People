@@ -1,7 +1,9 @@
 using SlowpokeStudio.Audio;
 using SlowpokeStudio.Currecny;
 using SlowpokeStudio.Event;
+using SlowpokeStudio.Gameplay;
 using SlowpokeStudio.Generic;
+using SlowpokeStudio.Level;
 using SlowpokeStudio.Manager;
 using SlowpokeStudio.UI;
 using System.Collections.Generic;
@@ -16,6 +18,8 @@ namespace SlowpokeStudio.Services
         [SerializeField] internal CurrencyManager currencyManager;
         [SerializeField] internal EventManager eventManager;
         [SerializeField] internal GameManager gameManager;
+        [SerializeField] internal LevelManager levelManager;
+        [SerializeField] internal PlayerController playerController;
         [SerializeField] internal UIManager uiManager;
 
         protected override void Awake()
@@ -41,6 +45,8 @@ namespace SlowpokeStudio.Services
             { "AudioManager", audioManager },
             { "CurrencyManager", currencyManager },
             { "EventManager", eventManager },
+            { "PlayerController", playerController },
+            { "LevelManager", levelManager },
             { "UIManager", uiManager },
             };
 

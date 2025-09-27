@@ -2,7 +2,6 @@
 // UIManager is responsible for managing and updating the game's UI elements, including health, wave count, kills, currency, and tower selection.
 // It updates the UI when certain events happen, such as enemy deaths or health changes.
 #endregion
-using SlowpokeStudio.Manager;
 using SlowpokeStudio.Services;
 using TMPro;
 using UnityEngine;
@@ -51,12 +50,12 @@ namespace SlowpokeStudio.UI
 
         private void Start()
         {
-            GameService.Instance.eventManager.OnLevelCompleteEvent.AddListener(OnLevelCompleteButton);
+            GameService.Instance.eventManager.OnLevelCompleteEvent.AddListener(OnLevelCompleteEvent);
         }
 
         private void OnDestroy()
         {
-            GameService.Instance.eventManager.OnLevelCompleteEvent.RemoveListener(OnLevelCompleteButton);
+            GameService.Instance.eventManager.OnLevelCompleteEvent.RemoveListener(OnLevelCompleteEvent);
         }
         private void OnEnable()
         {
@@ -70,7 +69,7 @@ namespace SlowpokeStudio.UI
             settingsQuitButton.onClick.AddListener(OnSettingsQuitButton);
             settingsPanelCloseButton.onClick.AddListener(OnSettingsCloseButton);
 
-            nextLevelButton.onClick.AddListener(OnLevelCompleteButton);
+            nextLevelButton.onClick.AddListener(OnNextLevelButton);
 
             levelFailReplayButton.onClick.AddListener(OnLevelFailReplayButton);
             levelFailHomeButton.onClick.AddListener(OnLevelFailHomeButton);
@@ -89,7 +88,7 @@ namespace SlowpokeStudio.UI
             settingsQuitButton.onClick.RemoveListener(OnSettingsQuitButton);
             settingsPanelCloseButton.onClick.RemoveListener(OnSettingsCloseButton);
 
-            nextLevelButton.onClick.RemoveListener(OnLevelCompleteButton);
+            nextLevelButton.onClick.RemoveListener(OnNextLevelButton);
 
             levelFailReplayButton.onClick.RemoveListener(OnLevelFailReplayButton);
             levelFailHomeButton.onClick.RemoveListener(OnLevelFailHomeButton);
@@ -144,10 +143,17 @@ namespace SlowpokeStudio.UI
         #endregion
 
         #region Level COmpletion UI Button Method
-        private void OnLevelCompleteButton()
+        private void OnLevelCompleteEvent()
         {
             levelCompletePanel.SetActive(true);
             Debug.Log("On Next Level Button Clicked");
+        }
+        private void OnNextLevelButton()
+        {
+            Debug.Log("Trigger Next Level");
+            //GameService.Instance.levelManager.l
+            GameService.Instance.levelManager.LoadNextLevel();
+            levelCompletePanel.SetActive(false);
         }
         #endregion
 

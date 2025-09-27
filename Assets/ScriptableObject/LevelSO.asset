@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6962616c9fee10845bc2ea013c5a2c30, type: 3}
+  m_Name: LevelSO
+  m_EditorClassIdentifier: 
+  levels:
+  - levelName: 1
+    levelIndex: 0
+    levelPrefab: {fileID: 8855289909064260455, guid: e7fa30eff2b5d884babf0345de555936, type: 3}
+    coins: 10
+  - levelName: 2
+    levelIndex: 0
+    levelPrefab: {fileID: 201371956321804143, guid: e0cd40fedd379bc47a3fd924814b0d90, type: 3}
+    coins: 10
+  - levelName: 3
+    levelIndex: 0
+    levelPrefab: {fileID: 7427399395878678, guid: 4d15c85b4d45a2f4b8e0b79a0f8d40be, type: 3}
+    coins: 10

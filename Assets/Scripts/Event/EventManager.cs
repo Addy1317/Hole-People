@@ -10,7 +10,7 @@ namespace SlowpokeStudio.Event
     public class EventManager : MonoBehaviour
     {
         public EventController OnLevelCompleteEvent { get; private set; }
-
+        
         public EventManager()
         {
             OnLevelCompleteEvent = new EventController();

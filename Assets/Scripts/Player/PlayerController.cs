@@ -1,6 +1,7 @@
 ﻿using SlowpokeStudio.character;
 using SlowpokeStudio.Grid;
 using SlowpokeStudio.ManHole;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,27 +17,14 @@ namespace SlowpokeStudio.Gameplay
         private GridManager gridManager;
         private GridPathHandler pathCheckSystem;
         private GridObjectDetection gridObjectDetection;
-
+        private bool levelInitialized = false;
         private void Awake()
         {
             if (mainCamera == null)
                 mainCamera = Camera.main;
 
-            FindLevelReferences();
+            //FindLevelReferences();
         }
-
-        private void FindLevelReferences()
-        {
-            gridManager = GridManager.Instance;//FindObjectOfType<GridManager>();
-            pathCheckSystem = GridManager.Instance.pathCheckSystem;//FindObjectOfType<PathCheckSystem>();
-            gridObjectDetection = GridManager.Instance.gridObjectDetection;
-
-            if (gridManager == null || pathCheckSystem == null || gridObjectDetection == null)
-            {
-                Debug.LogError("[PlayerController] Missing GridManager or PathCheckSystem in level.");
-            }
-        }
-
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
@@ -82,6 +70,37 @@ namespace SlowpokeStudio.Gameplay
             }
 
         }
+
+        private void FindLevelReferences()
+        {
+            gridManager = GridManager.Instance;
+            pathCheckSystem = GridManager.Instance.pathCheckSystem;
+            gridObjectDetection = GridManager.Instance.gridObjectDetection;
+
+            if (gridManager == null || pathCheckSystem == null || gridObjectDetection == null)
+            {
+                Debug.LogError("[PlayerController] Missing GridManager or PathCheckSystem in level.");
+            }
+        }
+
+        public void InitLevelReferences()
+        {
+            gridManager = GridManager.Instance;
+            pathCheckSystem = GridManager.Instance.pathCheckSystem;
+            gridObjectDetection = GridManager.Instance.gridObjectDetection;
+
+            if (gridManager == null || pathCheckSystem == null || gridObjectDetection == null)
+            {
+                Debug.LogError("[PlayerController] Failed to initialize level references!");
+                levelInitialized = false;
+                return;
+            }
+
+            levelInitialized = true;
+            Debug.Log("[PlayerController] Level references initialized successfully.");
+        }
+
+
     }
 }
 
