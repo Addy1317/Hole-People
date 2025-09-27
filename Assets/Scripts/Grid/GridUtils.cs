@@ -6,7 +6,6 @@ namespace SlowpokeStudio.Grid
 {
     public class GridUtils : MonoBehaviour
     {
-        // You can make this static if you like
         public List<GridObjectData> GetAdjacentSameColorCharacters(
             Vector2Int currentPos,
             ObjectColor myColor,

@@ -27,22 +27,20 @@ namespace SlowpokeStudio.character
 
         private void Start()
         {
-            // Ensures color is set on scene load in play mode
             ApplyColor();
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            // Updates color immediately in the Editor when anything is changed
             if (!Application.isPlaying)
             {
                 if (_renderer == null)
                     _renderer = GetComponent<Renderer>();
 
                 ApplyColor();
-                EditorApplication.QueuePlayerLoopUpdate(); // forces update
-                SceneView.RepaintAll(); // visually refresh scene
+                EditorApplication.QueuePlayerLoopUpdate(); 
+                SceneView.RepaintAll(); 
             }
         }
 #endif
@@ -68,5 +66,4 @@ namespace SlowpokeStudio.character
             }
         }
     }
-
 }

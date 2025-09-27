@@ -9,7 +9,7 @@ namespace SlowpokeStudio.Grid
         [SerializeField] private int rows = 6;
         [SerializeField] private int columns = 6;
         [SerializeField] private float cellSize = 1f;
-        [SerializeField] private Vector3 origin = Vector3.zero; // now Vector3 instead of Vector2
+        [SerializeField] private Vector3 origin = Vector3.zero; 
 
         [Header("Line Settings")]
         [SerializeField] private Material lineMaterial;
@@ -25,13 +25,11 @@ namespace SlowpokeStudio.Grid
 
         private void DrawGridLines()
         {
-            // Clear old grid if exists
             if (gridParent != null) Destroy(gridParent.gameObject);
 
             gridParent = new GameObject("GridLines").transform;
             gridParent.SetParent(transform);
 
-            // Horizontal lines (along X axis, moving in Z)
             for (int z = 0; z <= rows; z++)
             {
                 Vector3 start = origin + new Vector3(0, 0, z * cellSize);
@@ -39,7 +37,6 @@ namespace SlowpokeStudio.Grid
                 CreateLine(start, end, gridParent);
             }
 
-            // Vertical lines (along Z axis, moving in X)
             for (int x = 0; x <= columns; x++)
             {
                 Vector3 start = origin + new Vector3(x * cellSize, 0, 0);

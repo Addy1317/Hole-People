@@ -11,10 +11,6 @@ namespace SlowpokeStudio.Grid
         [SerializeField] private int gridHeight = 10;
         [SerializeField] private float characterLookupRadius = 0.2f;
 
-        /// <summary>
-        /// BFS starting from the hole.
-        /// Collects all same-color characters connected through empty cells.
-        /// </summary>
         public Dictionary<CharacterManager, List<Vector2Int>> CollectReachableFromHole(Vector2Int holePos, ObjectColor targetColor)
         {
             var result = new Dictionary<CharacterManager, List<Vector2Int>>();
@@ -37,25 +33,22 @@ namespace SlowpokeStudio.Grid
 
                     var cell = GridManager.Instance.GetCell(nb.x, nb.y);
 
-                    // Case 1: Empty → keep exploring
                     if (cell == CellType.Empty)
                     {
                         visited.Add(nb);
                         cameFrom[nb] = current;
                         q.Enqueue(nb);
                     }
-                    // Case 2: Character
+
                     else if (cell == CellType.Character)
                     {
                         if (GridManager.Instance.gridObjectDetection.characterMap.TryGetValue(nb, out var charData))
                         {
                             if (charData.color == targetColor)
                             {
-                                // ✅ First record how we reached this cell
                                 if (!cameFrom.ContainsKey(nb))
                                     cameFrom[nb] = current;
 
-                                // Found a valid character
                                 CharacterManager cm = charData.characterRef;
                                 if (cm != null && cm.gameObject.activeInHierarchy)
                                 {
@@ -63,13 +56,11 @@ namespace SlowpokeStudio.Grid
                                     result[cm] = path;
                                 }
 
-                                // ✅ Still expand BFS past this character
                                 visited.Add(nb);
                                 q.Enqueue(nb);
                             }
                         }
                     }
-                    // Case 3: Hole or wrong-color character → block
                 }
             }
 
@@ -101,10 +92,6 @@ namespace SlowpokeStudio.Grid
             yield return new Vector2Int(pos.x, pos.y - 1);
         }
 
-        /// <summary>
-        /// Resolve the CharacterManager at a given grid position via physics overlap.
-        /// Keeps this class independent from whether characterRef was filled in detection.
-        /// </summary>
         private CharacterManager FindCharacterAtGridPos(Vector2Int gridPos)
         {
             Vector3 world = GridManager.Instance.GetWorldPosition(gridPos.x, gridPos.y);
@@ -117,12 +104,7 @@ namespace SlowpokeStudio.Grid
             return null;
         }
 
-        // -------------------------------
-        // YOUR EXISTING STRAIGHT-LINE API
-        // (kept for compatibility)
-        // -------------------------------
-
-        public List<GridObjectData> GetMovableCharacters(Vector2Int holePos, ObjectColor targetColor)
+        internal List<GridObjectData> GetMovableCharacters(Vector2Int holePos, ObjectColor targetColor)
         {
             List<GridObjectData> validCharacters = new List<GridObjectData>();
 

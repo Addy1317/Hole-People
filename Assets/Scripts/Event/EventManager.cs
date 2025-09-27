@@ -1,8 +1,3 @@
-#region Summary
-// EventManager serves as a central hub for managing game events in the HouseDefence namespace.
-// This class uses the Singleton pattern to ensure only one instance exists throughout the game.
-// Events are initialized in the Awake method, and the class persists across scene transitions.
-#endregion
 using UnityEngine;
 
 namespace SlowpokeStudio.Event
@@ -10,10 +5,12 @@ namespace SlowpokeStudio.Event
     public class EventManager : MonoBehaviour
     {
         public EventController OnLevelCompleteEvent { get; private set; }
-        
+        public EventsController<int> OnCoinsChanged { get; private set; }
+
         public EventManager()
         {
             OnLevelCompleteEvent = new EventController();
+            OnCoinsChanged =  new EventsController<int>();
         }
     }
 }

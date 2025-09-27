@@ -1,4 +1,4 @@
-using SlowpokeStudio.Services;
+﻿using SlowpokeStudio.Services;
 using System.Collections;
 using UnityEngine;
 
@@ -24,10 +24,10 @@ namespace SlowpokeStudio.Level
 
         private void Start()
         {
+            currentLevelIndex = GameService.Instance.saveManager.CurrentLevelIndex;
             StartCoroutine(LoadLevelRoutine(currentLevelIndex));
         }
 
-        // Call this instead of LoadLevel(index)
         private IEnumerator LoadLevelRoutine(int index)
         {
             if (index < 0 || index >= levelDatabase.levels.Length)
@@ -36,20 +36,14 @@ namespace SlowpokeStudio.Level
                 yield break;
             }
 
-            // 1) Tear down current level (deferred)
             if (activeLevelInstance != null)
             {
                 Destroy(activeLevelInstance);
                 activeLevelInstance = null;
             }
 
-            // 2) Wait until the previous GridManager instance is actually gone
-            //    (Destroy() completes end-of-frame)
-            yield return null; // one frame is usually enough
-            // If you want to be extra safe:
-            // yield return new WaitUntil(() => GridManager.Instance == null);
+            yield return null; 
 
-            // 3) Spawn the new level
             LevelDataSO levelData = levelDatabase.levels[index];
             if (levelData.levelPrefab == null)
             {
@@ -60,10 +54,16 @@ namespace SlowpokeStudio.Level
             activeLevelInstance = Instantiate(levelData.levelPrefab, levelParent);
             currentLevelIndex = index;
 
-            // 4) Give the new GridManager a frame to run Awake/Start, then init PlayerController
             yield return null;
 
-            GameService.Instance.playerController.InitLevelReferences();
+            if (GameService.Instance.playerController != null)
+            {
+                GameService.Instance.playerController.InitLevelReferences();
+            }
+            else
+            {
+                Debug.LogError("[LevelManager] PlayerController not found in GameService!");
+            }
 
             if (GameService.Instance.uiManager != null)
             {
@@ -76,13 +76,36 @@ namespace SlowpokeStudio.Level
 
         internal void LoadNextLevel()
         {
+            var coins = levelDatabase.levels[currentLevelIndex].coins;
+            GameService.Instance.currencyManager.AddCoins(coins);
+
             int nextIndex = currentLevelIndex + 1;
             if (nextIndex >= levelDatabase.levels.Length)
             {
                 Debug.Log("[LevelManager] All levels completed!");
+                OnAllLevelsCompleted();
                 return;
             }
+            GameService.Instance.saveManager.SaveLevel(currentLevelIndex, currentLevelIndex);
             StartCoroutine(LoadLevelRoutine(nextIndex));
+        }
+
+        internal void RestartLevel()
+        {
+            Debug.Log($"[LevelManager] Restarting Level {currentLevelIndex}");
+            StartCoroutine(LoadLevelRoutine(currentLevelIndex));
+        }
+
+        private void OnAllLevelsCompleted()
+        {
+            if (GameService.Instance.uiManager != null)
+            {
+                GameService.Instance.uiManager.OnAllLevelCompleted();
+            }
+            else
+            {
+                Debug.LogWarning("[LevelManager] UIManager not found. Cannot show completion panel.");
+            }
         }
     }
 }

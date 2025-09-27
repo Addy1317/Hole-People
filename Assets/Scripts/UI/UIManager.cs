@@ -3,6 +3,7 @@
 // It updates the UI when certain events happen, such as enemy deaths or health changes.
 #endregion
 using SlowpokeStudio.Services;
+using SlowpokeStudio.Audio;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -38,11 +39,11 @@ namespace SlowpokeStudio.UI
         [Header("Coins Earned Text")]
         [SerializeField] internal TextMeshProUGUI coinsEarnedText;
 
-        [Header("Level Fail Reference")]
-        [SerializeField] internal GameObject levelFailPanel;
-        [SerializeField] internal Button levelFailReplayButton;
-        [SerializeField] internal Button levelFailHomeButton;
-        [SerializeField] internal Button LevelFailQuitButton;
+        [Header("All level Complete Reference")]
+        [SerializeField] internal GameObject allLevelsCompletedPanel;
+        //[SerializeField] internal Button allLevelCompletedReplayButton;
+        [SerializeField] internal Button allLevelCompletedHomeButton;
+        [SerializeField] internal Button allLevelCompletedQuitButton;
 
         private void Awake()
         {
@@ -52,11 +53,13 @@ namespace SlowpokeStudio.UI
         private void Start()
         {
             GameService.Instance.eventManager.OnLevelCompleteEvent.AddListener(OnLevelCompleteEvent);
+            GameService.Instance.eventManager.OnCoinsChanged.AddListeners(UpdateCoinsUI);
         }
 
         private void OnDestroy()
         {
             GameService.Instance.eventManager.OnLevelCompleteEvent.RemoveListener(OnLevelCompleteEvent);
+            GameService.Instance.eventManager.OnCoinsChanged.RemoveListeners(UpdateCoinsUI);
         }
         private void OnEnable()
         {
@@ -72,9 +75,9 @@ namespace SlowpokeStudio.UI
 
             nextLevelButton.onClick.AddListener(OnNextLevelButton);
 
-            levelFailReplayButton.onClick.AddListener(OnLevelFailReplayButton);
-            levelFailHomeButton.onClick.AddListener(OnLevelFailHomeButton);
-            LevelFailQuitButton.onClick.AddListener(OnLevelFailQuitButton);
+            //allLevelCompletedReplayButton.onClick.AddListener(OnAlLevelCompletedReplayButton);
+            allLevelCompletedHomeButton.onClick.AddListener(OnAllLevelCompletedHomeButton);
+            allLevelCompletedQuitButton.onClick.AddListener(OnAllLevelCompletedQuitButton);
         }
 
         private void OnDisable()
@@ -91,9 +94,9 @@ namespace SlowpokeStudio.UI
 
             nextLevelButton.onClick.RemoveListener(OnNextLevelButton);
 
-            levelFailReplayButton.onClick.RemoveListener(OnLevelFailReplayButton);
-            levelFailHomeButton.onClick.RemoveListener(OnLevelFailHomeButton);
-            LevelFailQuitButton.onClick.RemoveListener(OnLevelFailQuitButton);
+            //allLevelCompletedReplayButton.onClick.RemoveListener(OnAlLevelCompletedReplayButton);
+            allLevelCompletedHomeButton.onClick.RemoveListener(OnAllLevelCompletedHomeButton);
+            allLevelCompletedQuitButton.onClick.RemoveListener(OnAllLevelCompletedQuitButton);
 
         }
 
@@ -101,12 +104,14 @@ namespace SlowpokeStudio.UI
 
         private void OnplayButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             mainMenuUI.SetActive(false);
             Debug.Log("Game Started");
         }
 
         private void OnQuitButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             Application.Quit();
         }
 
@@ -115,16 +120,20 @@ namespace SlowpokeStudio.UI
         #region Main Game UI Buttons Methoods
         private void OnReplayButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             Debug.Log("Replaying Level");
+            GameService.Instance.levelManager.RestartLevel();
         }
 
         private void OnsettingsButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             settingsPanel.SetActive(true);
             Debug.Log("Settings Panel Active");
         }
         public void UpdateLevelText(int index, string name)
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             if (currentLevelText == null)
             {
                 Debug.LogWarning("[UIManager] Level Text reference missing!");
@@ -134,22 +143,31 @@ namespace SlowpokeStudio.UI
             // Example formatting: "Level 1 - Tutorial"
             currentLevelText.text = $"Level : {name}";
         }
+        private void UpdateCoinsUI(int newTotal)
+        {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
+
+            coinsEarnedText.text = $"Coins: {newTotal}";
+        }
         #endregion
 
         #region Settings UI Buttons Methods
         private void OnHomeButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             mainMenuUI.SetActive(true);
             Debug.Log("On Home Button Active");
         }
 
         private void OnSettingsQuitButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             Application.Quit();
         }
 
         private void OnSettingsCloseButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             settingsPanel.SetActive(false);
         }
         #endregion
@@ -157,6 +175,7 @@ namespace SlowpokeStudio.UI
         #region Level Completion UI Button Method
         private void OnLevelCompleteEvent()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnLevelCompleteSFX);
             nextLevelButton.gameObject.SetActive(false);
             levelCompletePanel.SetActive(true);
             GameService.Instance.levelManager.LoadNextLevel();
@@ -171,24 +190,48 @@ namespace SlowpokeStudio.UI
         }
         private void OnNextLevelButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             Debug.Log("Trigger Next Level");
             levelCompletePanel.SetActive(false);
         }
+
         #endregion
 
-        #region Level Fail UI Buttons Methods
-        private void OnLevelFailReplayButton()
+        #region All Level Completed UI Buttons Methods
+        public void OnAllLevelCompleted()
         {
-            levelFailPanel.SetActive(false);
+            Debug.Log("[UIManager] Showing All Levels Completed Panel");
+            allLevelsCompletedPanel.SetActive(true);
         }
 
-        private void OnLevelFailHomeButton()
+        private void OnAlLevelCompletedReplayButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
+            allLevelsCompletedPanel.SetActive(false);
+        }
+
+        private void OnAllLevelCompletedHomeButton()
+        {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             mainMenuUI.SetActive(true);
+            allLevelsCompletedPanel.SetActive(false);
+            Debug.Log("[UIManager] Switched to Main Menu UI");
+            if (GameService.Instance.saveManager != null)
+            {
+                GameService.Instance.saveManager.ClearAllData();
+            }
+            else
+            {
+                // Fallback if you're using PlayerPrefs directly
+                PlayerPrefs.DeleteAll();
+                PlayerPrefs.Save();
+                Debug.Log("[LevelManager] All PlayerPrefs cleared!");
+            }
         }
 
-        private void OnLevelFailQuitButton()
+        private void OnAllLevelCompletedQuitButton()
         {
+            GameService.Instance.audioManager.PlaySFX(SFXType.OnButtonClickSFX);
             Application.Quit();
         }
         #endregion

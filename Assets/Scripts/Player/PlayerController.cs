@@ -1,7 +1,7 @@
 ﻿using SlowpokeStudio.character;
 using SlowpokeStudio.Grid;
 using SlowpokeStudio.ManHole;
-using System.Collections;
+using SlowpokeStudio.Services;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,17 +13,16 @@ namespace SlowpokeStudio.Gameplay
         [SerializeField] private Camera mainCamera;
         [SerializeField] private float rayDistance = 100f;
 
-        // References
         private GridManager gridManager;
         private GridPathHandler pathCheckSystem;
         private GridObjectDetection gridObjectDetection;
         private bool levelInitialized = false;
+
         private void Awake()
         {
             if (mainCamera == null)
                 mainCamera = Camera.main;
 
-            //FindLevelReferences();
         }
         private void Update()
         {
@@ -45,10 +44,9 @@ namespace SlowpokeStudio.Gameplay
                 if (hole != null)
                 {
                     Debug.Log($"[PlayerController] Tapped Hole with color: {hole.holeColor}");
-
+                    GameService.Instance.audioManager.PlaySFX(SFXType.OnHoleClickSFX);
                     Vector2Int holeGridPos = gridManager.GetGridPosition(hole.transform.position);
 
-                    // 🔹 NEW: Ask BFS for all reachable characters + paths
                     var reachable = pathCheckSystem.CollectReachableFromHole(holeGridPos, hole.holeColor);
 
                     int movedCount = 0;
@@ -71,18 +69,6 @@ namespace SlowpokeStudio.Gameplay
 
         }
 
-        private void FindLevelReferences()
-        {
-            gridManager = GridManager.Instance;
-            pathCheckSystem = GridManager.Instance.pathCheckSystem;
-            gridObjectDetection = GridManager.Instance.gridObjectDetection;
-
-            if (gridManager == null || pathCheckSystem == null || gridObjectDetection == null)
-            {
-                Debug.LogError("[PlayerController] Missing GridManager or PathCheckSystem in level.");
-            }
-        }
-
         public void InitLevelReferences()
         {
             gridManager = GridManager.Instance;
@@ -99,8 +85,6 @@ namespace SlowpokeStudio.Gameplay
             levelInitialized = true;
             Debug.Log("[PlayerController] Level references initialized successfully.");
         }
-
-
     }
 }
 

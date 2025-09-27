@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef82a9dfb8c7870439ecd1b2227089b5, type: 3}
   m_Name: AudioSO
   m_EditorClassIdentifier: 
-  backgroundMusicClip: {fileID: 0}
+  backgroundMusicClip: {fileID: 8300000, guid: 7d19cfc39b54a814da0f54d3b0d9fb45, type: 3}
   backgroundMusicVolume: 0.5
-  sfxClips: []
+  sfxClips:
+  - sfxType: 0
+    audioClip: {fileID: 8300000, guid: 65f3d262d401f1e41806f1777018a15b, type: 3}
+  - sfxType: 1
+    audioClip: {fileID: 8300000, guid: 4933c495b7e26a54d89fd7864ae5010d, type: 3}
+  - sfxType: 2
+    audioClip: {fileID: 8300000, guid: 752f80c138ceb9544955703af0f40928, type: 3}
+  - sfxType: 3
+    audioClip: {fileID: 8300000, guid: 53a726ec235e6ec4683e9bd53863f937, type: 3}
   sfxVolume: 0.5

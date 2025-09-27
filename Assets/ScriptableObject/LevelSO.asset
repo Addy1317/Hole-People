@@ -20,8 +20,16 @@ MonoBehaviour:
   - levelName: 2
     levelIndex: 0
     levelPrefab: {fileID: 201371956321804143, guid: e0cd40fedd379bc47a3fd924814b0d90, type: 3}
-    coins: 10
+    coins: 20
   - levelName: 3
     levelIndex: 0
     levelPrefab: {fileID: 7427399395878678, guid: 4d15c85b4d45a2f4b8e0b79a0f8d40be, type: 3}
-    coins: 10
+    coins: 30
+  - levelName: 4
+    levelIndex: 0
+    levelPrefab: {fileID: 7427399395878678, guid: ccb01832a4532384ca4e6127d7112049, type: 3}
+    coins: 40
+  - levelName: 5
+    levelIndex: 0
+    levelPrefab: {fileID: 7427399395878678, guid: 35c7a2f7f08c8444988e35a7d2dc3a80, type: 3}
+    coins: 50

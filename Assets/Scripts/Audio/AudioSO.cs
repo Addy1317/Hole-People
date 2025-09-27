@@ -1,18 +1,14 @@
-#region Summary
-/// <summary>
-/// AudioSO is a ScriptableObject used for managing audio settings in the game.
-/// It handles the background music and sound effects (SFX), storing audio clips 
-/// and their corresponding volumes. It allows easy retrieval of specific SFX clips 
-/// based on the type (e.g., button click sounds).
-/// </summary>
-#endregion
 using UnityEngine;
 
 namespace SlowpokeStudio
 {
     public enum SFXType
     {
-        OnButtonClickSFX
+        OnButtonClickSFX,
+        OnHoleClickSFX,
+        OnCharaceterReachedToHoleSFX,
+        OnLevelCompleteSFX
+         
     }
 
     [CreateAssetMenu(fileName = "AudioSO", menuName = "Audio/AudioSO")]

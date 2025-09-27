@@ -17,8 +17,8 @@ namespace SlowpokeStudio.Grid
         private CellType[,] gridArray;
 
         [Header("System References")]
-        public GridPathHandler pathCheckSystem;
-        public GridObjectDetection gridObjectDetection;
+        [SerializeField] internal GridPathHandler pathCheckSystem;
+        [SerializeField] internal GridObjectDetection gridObjectDetection;
 
         private void Awake()
         {
@@ -32,11 +32,12 @@ namespace SlowpokeStudio.Grid
             gridArray = new CellType[gridWidth, gridHeight];
             InitializeGrid();
         }
+
         private void OnDestroy()
         {
             if (Instance == this)
             {
-                Instance = null;   // ✅ frees slot for the next Level prefab
+                Instance = null;   
             }
         }
 
@@ -53,15 +54,14 @@ namespace SlowpokeStudio.Grid
             Debug.Log("[GridManager] Grid initialized.");
         }
 
-        // ✅ API Methods
-        public CellType GetCell(int x, int y)
+        internal CellType GetCell(int x, int y)
         {
             if (IsWithinBounds(x, y))
                 return gridArray[x, y];
             return CellType.Empty;
         }
 
-        public void SetCell(int x, int y, CellType type)
+        internal void SetCell(int x, int y, CellType type)
         {
             if (IsWithinBounds(x, y))
             {
@@ -70,20 +70,19 @@ namespace SlowpokeStudio.Grid
             }
         }
 
-        public bool IsWithinBounds(int x, int y)
+        internal bool IsWithinBounds(int x, int y)
         {
             return x >= 0 && y >= 0 && x < gridWidth && y < gridHeight;
         }
 
-        // ✅ Position Conversions
-        public Vector2Int GetGridPosition(Vector3 worldPosition)
+        internal Vector2Int GetGridPosition(Vector3 worldPosition)
         {
             int x = Mathf.RoundToInt((worldPosition.x - originPosition.x) / cellSize);
-            int y = Mathf.RoundToInt((worldPosition.z - originPosition.z) / cellSize); // assuming grid in XZ plane
+            int y = Mathf.RoundToInt((worldPosition.z - originPosition.z) / cellSize); 
             return new Vector2Int(x, y);
         }
 
-        public Vector3 GetWorldPosition(int x, int y)
+        internal Vector3 GetWorldPosition(int x, int y)
         {
             return new Vector3(
                 x * cellSize + originPosition.x,
@@ -92,7 +91,6 @@ namespace SlowpokeStudio.Grid
             );
         }
 
-        // ✅ Debugging
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.gray;

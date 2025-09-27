@@ -1,9 +1,3 @@
-#region Summary
-/// <summary>
-/// Manages background music and sound effects (SFX) in the game.
-/// Handles volume control and playback for background music and SFX.
-/// </summary>
-#endregion
 using UnityEngine;
 using UnityEngine.UI;
 

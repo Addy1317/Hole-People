@@ -5,6 +5,7 @@ using SlowpokeStudio.Gameplay;
 using SlowpokeStudio.Generic;
 using SlowpokeStudio.Level;
 using SlowpokeStudio.Manager;
+using SlowpokeStudio.Save;
 using SlowpokeStudio.UI;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace SlowpokeStudio.Services
         [SerializeField] internal GameManager gameManager;
         [SerializeField] internal LevelManager levelManager;
         [SerializeField] internal PlayerController playerController;
+        [SerializeField] internal SaveManager saveManager;
         [SerializeField] internal UIManager uiManager;
 
         protected override void Awake()
@@ -46,6 +48,7 @@ namespace SlowpokeStudio.Services
             { "CurrencyManager", currencyManager },
             { "EventManager", eventManager },
             { "PlayerController", playerController },
+            { "SaveManager", saveManager },
             { "LevelManager", levelManager },
             { "UIManager", uiManager },
             };
