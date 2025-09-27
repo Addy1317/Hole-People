@@ -123,6 +123,17 @@ namespace SlowpokeStudio.UI
             settingsPanel.SetActive(true);
             Debug.Log("Settings Panel Active");
         }
+        public void UpdateLevelText(int index, string name)
+        {
+            if (currentLevelText == null)
+            {
+                Debug.LogWarning("[UIManager] Level Text reference missing!");
+                return;
+            }
+
+            // Example formatting: "Level 1 - Tutorial"
+            currentLevelText.text = $"Level : {name}";
+        }
         #endregion
 
         #region Settings UI Buttons Methods

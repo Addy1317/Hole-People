@@ -62,7 +62,14 @@ namespace SlowpokeStudio.Level
 
             // 4) Give the new GridManager a frame to run Awake/Start, then init PlayerController
             yield return null;
+
             GameService.Instance.playerController.InitLevelReferences();
+
+            if (GameService.Instance.uiManager != null)
+            {
+                var levelinfo = levelDatabase.levels[currentLevelIndex];
+                GameService.Instance.uiManager.UpdateLevelText(levelinfo.levelIndex, levelinfo.levelName);
+            }
 
             Debug.Log($"[LevelManager] Loaded Level {levelData.levelIndex}: {levelData.levelName}, Coins: {levelData.coins}");
         }
