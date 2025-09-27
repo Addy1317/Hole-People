@@ -21,65 +21,6 @@ namespace SlowpokeStudio.Level
                 return;
             }
         }
-        /*
-                private void Start()
-                {
-                    LoadLevel(currentLevelIndex);
-                }
-
-                private void LoadLevel(int index)
-                {
-                    if (index < 0 || index >= levelDatabase.levels.Length)
-                    {
-                        Debug.LogError($"[LevelManager] Invalid level index {index}");
-                        return;
-                    }
-
-                    // Remove previous level
-                    if (activeLevelInstance != null)
-                    {
-                        Destroy(activeLevelInstance);
-                        activeLevelInstance = null;
-                    }
-
-                    LevelDataSO levelData = levelDatabase.levels[index];
-                    if (levelData.levelPrefab == null)
-                    {
-                        Debug.LogError($"[LevelManager] No prefab assigned for {levelData.levelName}");
-                        return;
-                    }
-
-                    // Instantiate new level
-                    activeLevelInstance = Instantiate(levelData.levelPrefab, levelParent);
-                    currentLevelIndex = index;
-                    // StartCoroutine(InitializeLevelNextFrame());
-
-                    GameService.Instance.playerController.InitLevelReferences();
-                    Debug.Log($"[LevelManager] Loaded Level {levelData.levelIndex}: {levelData.levelName}, Coins Reward: {levelData.coins}");
-                }
-
-
-
-
-                private IEnumerator InitializeLevelNextFrame()
-                {
-                    yield return null; // wait 1 frame
-                    GameService.Instance.playerController.InitLevelReferences();
-                }
-
-                internal void LoadNextLevel()
-                {
-                    int nextIndex = currentLevelIndex + 1;
-
-                    if (nextIndex >= levelDatabase.levels.Length)
-                    {
-                        Debug.Log("[LevelManager] All levels completed!");
-                        // TODO: Trigger Game Over / Loop back to first level if needed
-                        return;
-                    }
-
-                    LoadLevel(nextIndex);
-                }*/
 
         private void Start()
         {
@@ -87,7 +28,7 @@ namespace SlowpokeStudio.Level
         }
 
         // Call this instead of LoadLevel(index)
-        private System.Collections.IEnumerator LoadLevelRoutine(int index)
+        private IEnumerator LoadLevelRoutine(int index)
         {
             if (index < 0 || index >= levelDatabase.levels.Length)
             {

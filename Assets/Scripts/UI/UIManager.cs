@@ -3,6 +3,7 @@
 // It updates the UI when certain events happen, such as enemy deaths or health changes.
 #endregion
 using SlowpokeStudio.Services;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -142,17 +143,24 @@ namespace SlowpokeStudio.UI
         }
         #endregion
 
-        #region Level COmpletion UI Button Method
+        #region Level Completion UI Button Method
         private void OnLevelCompleteEvent()
         {
+            nextLevelButton.gameObject.SetActive(false);
             levelCompletePanel.SetActive(true);
+            GameService.Instance.levelManager.LoadNextLevel();
+
+            StartCoroutine(NextButtonVisible());
             Debug.Log("On Next Level Button Clicked");
+        }
+        private IEnumerator NextButtonVisible()
+        {
+            yield return new WaitForSeconds(1f);
+            nextLevelButton.gameObject.SetActive(true);
         }
         private void OnNextLevelButton()
         {
             Debug.Log("Trigger Next Level");
-            //GameService.Instance.levelManager.l
-            GameService.Instance.levelManager.LoadNextLevel();
             levelCompletePanel.SetActive(false);
         }
         #endregion
